@@ -13,7 +13,21 @@ runs:
     - uses: actions/setup-python@v4
       with:
         python-version: ${{ inputs.python-version }}
-        cache: 'poetry'
+    - name: Create poetry environment
+      run: poetry env use python
+      shell: bash
+    - name: Show contents
+      run: poetry show -v
+      shell: bash
+    - name: Update pip
+      run: poetry run pip install --upgrade pip
+      shell: bash
+    - name: Show contents with pip
+      run: poetry run pip freeze
+      shell: bash
+    - name: Preinstall torch without CUDA
+      run: poetry run pip install torch torchvision --extra-index-url https://download.pytorch.org/whl/cpu
+      shell: bash
     - name: Install dependencies
-      run: poetry install --all-extras
+      run: poetry install --all-extras --sync
       shell: bash
